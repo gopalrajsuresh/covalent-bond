@@ -1,6 +1,6 @@
 {
   "name": "covalent-bond",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP",
   "type": "module",
   "bin": {
