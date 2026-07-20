@@ -1,0 +1,35 @@
+node_modules/
+.env
+*.log
+.DS_Store
+.covalent/
+daemon.pid
+*.pid
+
+# Cloudflare Wrangler
+.wrangler/
+nul
+
+# Maintainer-only skills (not shipped in the public repo)
+.claude/skills/covalent-bond-pr/
+.claude/skills/covalent-bond-deploy/
+
+# Test temp files
+test/temp/
+test/*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+.claude/settings.local.json
+
+# Maintainer-only working notes and agent instructions (not in the public repo)
+AGENTS.md
+CLAUDE.md
+PROJECT.md
+CHANGELOG.md
