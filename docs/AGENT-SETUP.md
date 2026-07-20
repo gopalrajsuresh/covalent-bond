@@ -12,6 +12,17 @@ middle can never read the traffic.
 
 ## Step 1: install
 
+Two paths; ask the human which they prefer, defaulting to npx.
+
+**Path A (default): npm package, no clone.** Nothing to do in this step:
+`npx -y covalent-bond` in step 3 fetches the published package on first
+run. Just verify Node is v18 or newer (`node --version`); if older, stop
+and tell the human to upgrade first. The relay URL is passed as an
+environment variable at registration (step 3), so step 2's `.env` file
+does not apply to this path.
+
+**Path B: from source** (for reading the code or contributing):
+
 ```bash
 git clone https://github.com/gopalrajsuresh/covalent-bond.git covalent-bond
 cd covalent-bond
@@ -22,7 +33,7 @@ npm test
 All test suites must pass; they run offline against an in-process mock
 relay. If Node is older than v18, stop and tell the human to upgrade first.
 
-## Step 2: configure the relay
+## Step 2: configure the relay (source path only)
 
 ```bash
 cp .env.example .env        # PowerShell: Copy-Item .env.example .env
@@ -34,7 +45,8 @@ uncomment-and-use lines. Rule that matters: **both machines must use the
 same relay URL.**
 
 Before moving on, tell the human they have a choice here and ask which they
-want:
+want (this choice applies to the npx path too; there it lands in the env
+var at step 3 instead of `.env`):
 
 - **Public relay (default)**: zero setup, best-effort availability,
   rate-limited, sessions expire after 30 idle minutes. Equally secure: the
@@ -50,12 +62,13 @@ want:
 
 ## Step 3: register the MCP server
 
-Use the absolute path of the cloned folder. For Claude Code:
+**Path A (npx).** For Claude Code:
 
 ```bash
-claude mcp add --scope user covalent -- node <absolute-path>/covalent-bond/bin/cli.js
+claude mcp add --scope user --env COVALENT_RELAY_URL=https://covalent-bond-relay.gopalrajsuresh.workers.dev covalent -- npx -y covalent-bond
 ```
 
+(Replace the URL if the human chose their own relay in step 2's choice.)
 For other MCP clients (Cursor, Codex, Windsurf, Cline, ...): add this
 standard stdio-server entry to the client's MCP configuration (top-level key
 is usually `mcpServers` or `servers`), at user scope if the client supports
@@ -65,18 +78,25 @@ it:
 {
   "mcpServers": {
     "covalent": {
-      "command": "node",
-      "args": ["<absolute-path>/covalent-bond/bin/cli.js"]
+      "command": "npx",
+      "args": ["-y", "covalent-bond"],
+      "env": {
+        "COVALENT_RELAY_URL": "https://covalent-bond-relay.gopalrajsuresh.workers.dev"
+      }
     }
   }
 }
 ```
 
-On Windows, escape backslashes in the JSON path
-(`C:\\path\\to\\covalent-bond\\bin\\cli.js`); if the client fails to spawn
-`node` directly, use `"command": "cmd"` with
-`"args": ["/c", "node", "<path>"]`. Set `COVALENT_RELAY_URL` in an `env`
-block here only if you skipped the `.env` step above.
+On Windows, if the client fails to spawn `npx` directly, use
+`"command": "cmd"` with `"args": ["/c", "npx", "-y", "covalent-bond"]`.
+
+**Path B (source).** Same as above, but the command is `node` with the
+single argument `<absolute-path>/covalent-bond/bin/cli.js` (Claude Code:
+`claude mcp add --scope user covalent -- node <absolute-path>/covalent-bond/bin/cli.js`).
+The `env` block is unnecessary because `.env` from step 2 supplies the
+relay URL. On Windows, escape backslashes in the JSON path
+(`C:\\path\\to\\covalent-bond\\bin\\cli.js`).
 
 ## Step 4: verify (requires a restart the agent cannot do)
 

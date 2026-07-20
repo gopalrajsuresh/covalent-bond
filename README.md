@@ -48,25 +48,13 @@ It's peer-to-peer and end-to-end encrypted: the two agents pair up and exchange 
 
 **Shortcut: let your agent set everything up.** Paste [docs/AGENT-SETUP.md](docs/AGENT-SETUP.md) to any coding agent and say "set up Covalent Bond". It walks the agent through install, relay config, MCP registration, and pairing, with clear stops for the parts only a human may do.
 
-Or do it yourself on **both machines** (steps 1–4), then pair (step 5).
+Or do it yourself on **both machines** (steps 1–2), then pair (step 3).
 
-1. **Install**
+1. **Register the MCP server** with your agent — no install needed, `npx` fetches [the npm package](https://www.npmjs.com/package/covalent-bond). For Claude Code:
    ```bash
-   git clone https://github.com/gopalrajsuresh/covalent-bond.git covalent-bond
-   cd covalent-bond
-   npm install
-   npm test        # optional but recommended; all suites run offline
+   claude mcp add --scope user --env COVALENT_RELAY_URL=https://covalent-bond-relay.gopalrajsuresh.workers.dev covalent -- npx -y covalent-bond
    ```
-2. **Choose a relay and point at it.** Copy `.env.example` to `.env`; it already contains the public relay URL, so for the default setup this is all it takes:
-   ```bash
-   cp .env.example .env        # PowerShell: Copy-Item .env.example .env
-   ```
-   (To self-host instead, see [Pick a relay](#pick-a-relay) below.)
-3. **Register the MCP server** with your agent. For Claude Code:
-   ```bash
-   claude mcp add --scope user covalent -- node /absolute/path/to/covalent-bond/bin/cli.js
-   ```
-   (`--scope user` makes the `bond_*` tools available in every project, not just the folder you ran the command from.)
+   (`--scope user` makes the `bond_*` tools available in every project. The env var points at the public relay; to self-host instead, see [Pick a relay](#pick-a-relay).)
 
    <details>
    <summary>Other MCP clients (Cursor, Codex, Windsurf, …) — standard config</summary>
@@ -77,8 +65,8 @@ Or do it yourself on **both machines** (steps 1–4), then pair (step 5).
    {
      "mcpServers": {
        "covalent": {
-         "command": "node",
-         "args": ["/absolute/path/to/covalent-bond/bin/cli.js"],
+         "command": "npx",
+         "args": ["-y", "covalent-bond"],
          "env": {
            "COVALENT_RELAY_URL": "https://covalent-bond-relay.gopalrajsuresh.workers.dev"
          }
@@ -87,10 +75,23 @@ Or do it yourself on **both machines** (steps 1–4), then pair (step 5).
    }
    ```
 
-   The `env` block is optional if you configured the relay via `.env` (step 2). On **Windows**, use a full path like `C:\\path\\to\\covalent-bond\\bin\\cli.js` (escaped backslashes in JSON); if your client struggles to spawn `node` directly, wrap it: `"command": "cmd", "args": ["/c", "node", "C:\\path\\to\\covalent-bond\\bin\\cli.js"]`. For local testing without a deployed relay, run the built-in mock relay (`npm run relay:dev`) and point `COVALENT_RELAY_URL` at `http://localhost:8787`.
+   On **Windows**, if your client struggles to spawn `npx` directly, wrap it: `"command": "cmd", "args": ["/c", "npx", "-y", "covalent-bond"]`. For local testing without a deployed relay, run the mock relay from a source checkout (`npm run relay:dev`) and point `COVALENT_RELAY_URL` at `http://localhost:8787`.
    </details>
-4. **Restart your agent session**, then verify: ask the agent to run `bond_status`. It should reply "No active session", which means the tools are live.
-5. **Pair and share**
+
+   <details>
+   <summary>Prefer running from source?</summary>
+
+   ```bash
+   git clone https://github.com/gopalrajsuresh/covalent-bond.git covalent-bond
+   cd covalent-bond
+   npm install
+   npm test                    # optional but recommended; all suites run offline
+   cp .env.example .env        # PowerShell: Copy-Item .env.example .env
+   ```
+   The `.env` already contains the public relay URL. Then register with `command: node`, args `/absolute/path/to/covalent-bond/bin/cli.js` (Claude Code: `claude mcp add --scope user covalent -- node /absolute/path/to/covalent-bond/bin/cli.js`), no env var needed.
+   </details>
+2. **Restart your agent session**, then verify: ask the agent to run `bond_status`. It should reply "No active session", which means the tools are live.
+3. **Pair and share**
    - Machine A: *"Create a Covalent Bond session"* → agent runs `bond_connect` → you get a code like `AbCd-1234-XyZw`.
    - Tell the code to the other human **out-of-band** (chat or voice, never through the relay).
    - Machine B: *"Join Covalent Bond session AbCd-1234-XyZw"* → agent runs `bond_join`.
