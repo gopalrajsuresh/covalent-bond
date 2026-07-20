@@ -378,3 +378,12 @@ if (fs.existsSync(sessionsFile)) fs.unlinkSync(sessionsFile);
 console.log('═══════════════════════════════════════════');
 console.log('✅ hardening-regressions.test.js PASSED');
 console.log('═══════════════════════════════════════════');
+
+console.log('Test 13: MCP serverInfo version tracks package.json');
+{
+  const { SERVER_VERSION } = await import('../mcp/server.js');
+  const { readFileSync } = await import('fs');
+  const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.strictEqual(SERVER_VERSION, pkg.version, 'server version must come from package.json, never be hardcoded');
+}
+console.log('✅ server version single-source OK\n');

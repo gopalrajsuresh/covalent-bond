@@ -44,16 +44,22 @@ import {
   wrapUntrustedContent
 } from '../security/index.js';
 import { notifyDesktop } from './notify.js';
+import { readFileSync } from 'fs';
 
 // Inbound chat display cap: mirrors the bond_message send limit. Anything
 // longer is truncated for display (the peer's client enforces 4000 too, but
 // a modified client can skip that; never trust inbound sizes).
 const CHAT_MAX_CHARS = 4000;
 
+// Single source of truth for the version is package.json.
+export const SERVER_VERSION = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8')
+).version;
+
 class CovalentBondServer {
   constructor(relayUrl) {
     this.server = new Server(
-      { name: 'covalent', version: '0.1.0' },
+      { name: 'covalent', version: SERVER_VERSION },
       { capabilities: { tools: {} } }
     );
 
