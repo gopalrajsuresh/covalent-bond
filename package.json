@@ -1,0 +1,49 @@
+{
+  "name": "covalent-bond",
+  "version": "0.1.0",
+  "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP",
+  "type": "module",
+  "bin": {
+    "covalent": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "daemon/",
+    "mcp/",
+    "relay/",
+    "security/",
+    "transfer/",
+    "cloudflare-worker/",
+    "SECURITY.md",
+    ".env.example"
+  ],
+  "scripts": {
+    "test": "node test/run-all.js",
+    "relay:dev": "node test/mock-relay-server.js"
+  },
+  "keywords": [
+    "mcp",
+    "agent",
+    "e2ee",
+    "p2p",
+    "collaboration",
+    "encryption"
+  ],
+  "author": "gopalrajsuresh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gopalrajsuresh/covalent-bond.git"
+  },
+  "homepage": "https://github.com/gopalrajsuresh/covalent-bond#readme",
+  "bugs": {
+    "url": "https://github.com/gopalrajsuresh/covalent-bond/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "nanoid": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
