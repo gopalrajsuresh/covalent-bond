@@ -1,0 +1,12 @@
+# Gitleaks configuration. Extends the default ruleset; the allowlist below
+# covers deliberate test fixtures only (fake markers with no key material),
+# never real credentials.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures that intentionally mimic blocked secret formats"
+paths = [
+  '''test/security\.test\.js''',
+  '''test/hardening-regressions\.test\.js''',
+]
