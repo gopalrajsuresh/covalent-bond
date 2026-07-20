@@ -39,11 +39,8 @@ console.log('──────────────────────�
 console.log('(The relay never sees this code; it is the shared secret.)\n');
 console.log('⏳ Waiting for peer to join and confirm...\n');
 
-let confirmed = false;
-
 const polling = new PollingManager(sm, sessionManager, {
   onConfirmed: async () => {
-    confirmed = true;
     console.log('🔐 Secure channel established; peer verified the session code.\n');
     await polling.sendEncrypted({ type: 'chat', content: 'Hello from the Host!' });
     console.log('📤 Sent encrypted greeting to guest.\n');

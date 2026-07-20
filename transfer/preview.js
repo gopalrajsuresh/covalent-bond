@@ -117,7 +117,7 @@ function generateJsonPreview(content, maxLines) {
     const parsed = JSON.parse(content);
     const pretty = JSON.stringify(parsed, null, 2);
     return generateTextPreview(pretty, maxLines, 2000);
-  } catch (error) {
+  } catch {
     return generateTextPreview(content, maxLines, 2000);
   }
 }

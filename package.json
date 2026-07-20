@@ -4,7 +4,7 @@
   "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP",
   "type": "module",
   "bin": {
-    "covalent": "./bin/cli.js"
+    "covalent": "bin/cli.js"
   },
   "files": [
     "bin/",
@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "test": "node test/run-all.js",
-    "relay:dev": "node test/mock-relay-server.js"
+    "relay:dev": "node test/mock-relay-server.js",
+    "lint": "eslint ."
   },
   "keywords": [
     "mcp",
@@ -47,5 +48,9 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0"
   }
 }
