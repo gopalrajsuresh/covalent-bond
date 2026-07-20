@@ -1,0 +1,67 @@
+{
+  "manifest_version": "0.3",
+  "name": "covalent-bond",
+  "display_name": "Covalent Bond",
+  "version": "0.1.1",
+  "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP.",
+  "author": {
+    "name": "gopalrajsuresh",
+    "url": "https://github.com/gopalrajsuresh"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "bin/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/bin/cli.js"],
+      "env": {
+        "COVALENT_RELAY_URL": "${user_config.relay_url}",
+        "COVALENT_NOTIFICATIONS": "${user_config.notifications}",
+        "COVALENT_MAX_FILE_KB": "${user_config.max_file_kb}"
+      }
+    }
+  },
+  "user_config": {
+    "relay_url": {
+      "type": "string",
+      "title": "Relay URL",
+      "description": "Relay endpoint both peers meet at. The relay is untrusted by design and only ever sees ciphertext; use the public relay or deploy your own Cloudflare Worker (see the repository).",
+      "default": "https://covalent-bond-relay.gopalrajsuresh.workers.dev",
+      "required": false,
+      "sensitive": false
+    },
+    "notifications": {
+      "type": "boolean",
+      "title": "Desktop notifications",
+      "description": "Show a desktop notification when a message or file offer arrives from the peer.",
+      "default": true,
+      "required": false
+    },
+    "max_file_kb": {
+      "type": "number",
+      "title": "Max file size (KB)",
+      "description": "Per-file cap for transfers. Clamped to a 384 KB ceiling by the relay wire limit.",
+      "default": 256,
+      "min": 1,
+      "max": 384,
+      "required": false
+    }
+  },
+  "tools": [
+    { "name": "bond_connect", "description": "Create a session and get a shareable session code" },
+    { "name": "bond_join", "description": "Join a session using a code shared out-of-band" },
+    { "name": "bond_status", "description": "Connection status, pending transfers, and new events" },
+    { "name": "bond_send", "description": "Send a file to the connected peer, encrypted end to end" },
+    { "name": "bond_message", "description": "Send a short encrypted text message to the peer" },
+    { "name": "bond_wait", "description": "Long-poll for the next peer event" },
+    { "name": "bond_accept", "description": "Accept a pending file transfer after human consent" },
+    { "name": "bond_decline", "description": "Decline a pending file transfer" },
+    { "name": "bond_end", "description": "End the session and disconnect from the relay" }
+  ],
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
