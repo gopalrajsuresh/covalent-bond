@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.gopalrajsuresh/covalent-bond",
+  "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP.",
+  "repository": {
+    "url": "https://github.com/gopalrajsuresh/covalent-bond",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "covalent-bond",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "COVALENT_RELAY_URL",
+          "description": "Relay endpoint both peers meet at. Set to the public relay (https://covalent-bond-relay.gopalrajsuresh.workers.dev) or your own deployed Cloudflare Worker. Defaults to http://localhost:8787 (local mock relay) when unset.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "COVALENT_NOTIFICATIONS",
+          "description": "Set to 'off' to disable desktop notifications for incoming events.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "COVALENT_MAX_FILE_KB",
+          "description": "Per-file size cap in KB for transfers. Defaults to 256; clamped to a 384 KB ceiling.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "number"
+        }
+      ]
+    }
+  ]
+}
