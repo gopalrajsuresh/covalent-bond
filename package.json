@@ -13,7 +13,9 @@
     "relay/",
     "security/",
     "transfer/",
-    "cloudflare-worker/",
+    "cloudflare-worker/worker.js",
+    "cloudflare-worker/wrangler.toml",
+    "cloudflare-worker/README.md",
     "SECURITY.md",
     ".env.example"
   ],
