@@ -65,7 +65,7 @@ class CovalentBondServer {
     this.pendingNotifications = [];
 
     this.pollingManager = new PollingManager(this.relayClient, this.sessionManager, {
-      onConfirmed: (session) => {
+      onConfirmed: (_session) => {
         this.queueNotification(
           '🔐 Secure channel established: peer verified knowledge of the session code. ' +
           'File transfers are now allowed.'

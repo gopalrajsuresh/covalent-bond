@@ -38,8 +38,8 @@ export const logger = {
  * always redacted.
  */
 const REDACT_PATTERNS = [
-  /\<\|im_start\|\>/gi,
-  /\<\|im_end\|\>/gi,
+  /<\|im_start\|>/gi,
+  /<\|im_end\|>/gi,
   /<!--\s*SYSTEM/gi,
   /\/\*\s*SYSTEM\s*:/gi,
   /"""\s*SYSTEM\s*:/gi,
@@ -507,25 +507,25 @@ export function verifySecurityModule() {
     try {
       validateSessionCode('INVALID');
       return false;
-    } catch (e) { /* expected */ }
+    } catch { /* expected */ }
 
     // Test 3: Path traversal blocking
     try {
       safePath('../../.env', '/tmp/test');
       return false;
-    } catch (e) { /* expected */ }
+    } catch { /* expected */ }
 
     // Test 4: Windows device name blocking
     try {
       safePath('CON', '/tmp/test');
       return false;
-    } catch (e) { /* expected */ }
+    } catch { /* expected */ }
 
     // Test 5: Routing ID validation
     try {
       validateRoutingId('not-hex');
       return false;
-    } catch (e) { /* expected */ }
+    } catch { /* expected */ }
 
     logger.info('Security module verified');
     return true;

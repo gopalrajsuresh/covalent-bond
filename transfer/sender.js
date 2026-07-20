@@ -59,7 +59,7 @@ export class FileSender {
         routing: session.routingId.substring(0, 12)
       }, 'security');
 
-      throw new Error(`File blocked by security: ${error.message}`);
+      throw new Error(`File blocked by security: ${error.message}`, { cause: error });
     }
 
     const preview = generatePreview(filename, content);
@@ -117,12 +117,12 @@ export class FileSender {
       return fs.readFileSync(filepath);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        throw new Error(`File not found: ${filepath}`);
+        throw new Error(`File not found: ${filepath}`, { cause: error });
       }
       if (error.code === 'EACCES') {
-        throw new Error(`Permission denied: ${filepath}`);
+        throw new Error(`Permission denied: ${filepath}`, { cause: error });
       }
-      throw new Error(`Failed to read file: ${error.message}`);
+      throw new Error(`Failed to read file: ${error.message}`, { cause: error });
     }
   }
 

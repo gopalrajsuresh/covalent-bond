@@ -73,7 +73,7 @@ export class FileReceiver {
         reason: error.message,
         from: senderPeerId.substring(0, 8)
       }, 'security');
-      throw new Error(`Transfer blocked: ${error.message}`);
+      throw new Error(`Transfer blocked: ${error.message}`, { cause: error });
     }
 
     if (this.pendingTransfers.size >= MAX_PENDING_TRANSFERS) {
