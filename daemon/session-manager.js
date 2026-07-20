@@ -11,7 +11,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import os from 'os';
 import { customAlphabet } from 'nanoid';
 import {
   generateKeypair,

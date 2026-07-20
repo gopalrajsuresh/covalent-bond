@@ -303,7 +303,11 @@ export function safeWrite(resolvedPath, content, baseDir) {
     }
   }
 
-  fs.writeFileSync(resolvedPath, content);
+  // Exclusive create: refuses to follow a pre-planted symlink or clobber an
+  // existing file, even one racing the caller's collision check. Callers pick
+  // a fresh name first (see receiver.js), so EEXIST here is always an attack
+  // or a bug, never normal flow.
+  fs.writeFileSync(resolvedPath, content, { flag: 'wx', mode: 0o600 });
 
   auditToolCall('safeWrite', { path: resolvedPath, size: Buffer.byteLength(content) }, 'security');
 }

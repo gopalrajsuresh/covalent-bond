@@ -11,7 +11,7 @@
  * @returns {string} Formatted consent prompt for MCP response
  */
 export function generateConsentPrompt(consentData) {
-  const { transferId, consentMessage, preview } = consentData;
+  const { transferId, consentMessage } = consentData;
 
   const lines = [
     consentMessage,  // Already formatted by transfer/preview.js

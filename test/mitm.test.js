@@ -26,8 +26,7 @@ import {
   transcriptHash,
   keyConfirmationTag,
   encrypt,
-  decrypt,
-  generateNonce
+  decrypt
 } from '../daemon/crypto.js';
 import { SessionManager } from '../daemon/session-manager.js';
 import { PollingManager } from '../relay/poll.js';
@@ -56,9 +55,6 @@ console.log('Test 1: attacker cannot derive either session key without the code'
 // The attacker knows both DH shared secrets (it owns the substituted keys)...
 const attackerSecretWithGuest = deriveSharedSecret(
   attackerForGuest.privateKey, Buffer.from(guestSession.publicKey, 'hex'));
-const attackerSecretWithHost = deriveSharedSecret(
-  attackerForHost.privateKey, Buffer.from(hostKeyed.publicKey, 'hex'));
-
 // ...but without the session code it can only guess the code key.
 const attackerGuessCodeKey = deriveCodeKey('AAAA-BBBB-CCCC'); // wrong guess
 const attackerGuestKey = deriveSessionKey(

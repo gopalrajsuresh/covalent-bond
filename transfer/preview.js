@@ -18,7 +18,6 @@ export function generatePreview(filename, content, options = {}) {
   const {
     maxLines = 20,        // Max lines to show
     maxChars = 2000,      // Max characters per line
-    showSize = true       // Include file size in preview
   } = options;
 
   const ext = path.extname(filename).toLowerCase();

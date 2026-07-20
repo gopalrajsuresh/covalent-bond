@@ -213,6 +213,19 @@ try {
 
   assert.ok(fs.existsSync(testPath), '❌ Safe write should create file');
 
+  // Exclusive create: a second write to the same path must refuse, so a
+  // file (or symlink) planted between the caller's collision check and the
+  // write can never be followed or clobbered.
+  assert.throws(
+    () => safeWrite(testPath, 'attacker content', baseDir),
+    /EEXIST/,
+    '❌ safeWrite must refuse to overwrite an existing file'
+  );
+  assert.strictEqual(
+    fs.readFileSync(testPath, 'utf8'), 'test content',
+    '❌ Existing file content must be untouched after refused overwrite'
+  );
+
   // Cleanup
   fs.unlinkSync(testPath);
   fs.rmdirSync(baseDir);
@@ -220,6 +233,7 @@ try {
   console.log('✅ Symlink escape protection works\n');
 } catch (error) {
   console.error('❌ Symlink protection test failed:', error);
+  throw error;
 }
 
 // ============================================================================

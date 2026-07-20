@@ -127,7 +127,7 @@ console.log('✅ File transfer guest -> host OK');
 
 // --- Unconfirmed sessions must not be able to send ----------------------
 const strangerSM = new SessionManager();
-const strangerSession = strangerSM.createSession();
+strangerSM.createSession();
 const strangerSender = new FileSender(hostRelay, strangerSM);
 await assert.rejects(
   () => strangerSender.sendFile(tmpFile, 'nope'),
