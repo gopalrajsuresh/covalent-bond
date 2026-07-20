@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "covalent-bond",
   "display_name": "Covalent Bond",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP.",
   "author": {
     "name": "gopalrajsuresh",
@@ -13,7 +13,9 @@
     "entry_point": "bin/cli.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/bin/cli.js"],
+      "args": [
+        "${__dirname}/bin/cli.js"
+      ],
       "env": {
         "COVALENT_RELAY_URL": "${user_config.relay_url}",
         "COVALENT_NOTIFICATIONS": "${user_config.notifications}",
@@ -48,18 +50,49 @@
     }
   },
   "tools": [
-    { "name": "bond_connect", "description": "Create a session and get a shareable session code" },
-    { "name": "bond_join", "description": "Join a session using a code shared out-of-band" },
-    { "name": "bond_status", "description": "Connection status, pending transfers, and new events" },
-    { "name": "bond_send", "description": "Send a file to the connected peer, encrypted end to end" },
-    { "name": "bond_message", "description": "Send a short encrypted text message to the peer" },
-    { "name": "bond_wait", "description": "Long-poll for the next peer event" },
-    { "name": "bond_accept", "description": "Accept a pending file transfer after human consent" },
-    { "name": "bond_decline", "description": "Decline a pending file transfer" },
-    { "name": "bond_end", "description": "End the session and disconnect from the relay" }
+    {
+      "name": "bond_connect",
+      "description": "Create a session and get a shareable session code"
+    },
+    {
+      "name": "bond_join",
+      "description": "Join a session using a code shared out-of-band"
+    },
+    {
+      "name": "bond_status",
+      "description": "Connection status, pending transfers, and new events"
+    },
+    {
+      "name": "bond_send",
+      "description": "Send a file to the connected peer, encrypted end to end"
+    },
+    {
+      "name": "bond_message",
+      "description": "Send a short encrypted text message to the peer"
+    },
+    {
+      "name": "bond_wait",
+      "description": "Long-poll for the next peer event"
+    },
+    {
+      "name": "bond_accept",
+      "description": "Accept a pending file transfer after human consent"
+    },
+    {
+      "name": "bond_decline",
+      "description": "Decline a pending file transfer"
+    },
+    {
+      "name": "bond_end",
+      "description": "End the session and disconnect from the relay"
+    }
   ],
   "compatibility": {
-    "platforms": ["darwin", "win32", "linux"],
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
     "runtimes": {
       "node": ">=18.0.0"
     }
