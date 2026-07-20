@@ -60,7 +60,7 @@ jobs:
         run: |
           for i in 1 2 3 4 5; do
             sleep 10
-            if curl -s "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gopalrajsuresh/covalent-bond" | jq -e '.servers[] | select(.name == "io.github.gopalrajsuresh/covalent-bond")' >/dev/null; then
+            if curl -s "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gopalrajsuresh/covalent-bond" | jq -e '.servers[].server | select(.name == "io.github.gopalrajsuresh/covalent-bond")' >/dev/null; then
               echo "Listed in the MCP Registry."
               exit 0
             fi
