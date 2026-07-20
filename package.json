@@ -1,6 +1,6 @@
 {
   "name": "covalent-bond",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Peer-to-peer, end-to-end-encrypted collaboration channel for AI coding agents over MCP",
   "type": "module",
   "bin": {
@@ -52,5 +52,6 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.7.0"
-  }
+  },
+  "mcpName": "io.github.gopalrajsuresh/covalent-bond"
 }

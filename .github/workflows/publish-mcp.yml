@@ -1,0 +1,70 @@
+name: Publish to MCP Registry
+
+# Publishes server.json metadata to the official MCP Registry. The npm
+# package itself is published manually by the maintainer (owner-gated, 2FA);
+# this workflow refuses to run until that npm version is live.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verify version consistency
+        run: |
+          PKG=$(jq -r .version package.json)
+          SRV=$(jq -r .version server.json)
+          SRVPKG=$(jq -r '.packages[0].version' server.json)
+          NAME=$(jq -r .mcpName package.json)
+          SRVNAME=$(jq -r .name server.json)
+          echo "package.json=$PKG server.json=$SRV server.json/packages[0]=$SRVPKG"
+          test "$PKG" = "$SRV" || { echo "::error::package.json and server.json versions differ"; exit 1; }
+          test "$PKG" = "$SRVPKG" || { echo "::error::server.json packages[0].version differs"; exit 1; }
+          test "$NAME" = "$SRVNAME" || { echo "::error::mcpName and server.json name differ"; exit 1; }
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG_VERSION="${GITHUB_REF_NAME#v}"
+            test "$PKG" = "$TAG_VERSION" || { echo "::error::tag $GITHUB_REF_NAME does not match version $PKG"; exit 1; }
+          fi
+
+      - name: Verify the npm package version is live
+        run: |
+          VERSION=$(jq -r .version package.json)
+          PUBLISHED=$(npm view covalent-bond@"$VERSION" version 2>/dev/null || true)
+          test "$PUBLISHED" = "$VERSION" || { echo "::error::covalent-bond@$VERSION is not on npm yet; publish it first"; exit 1; }
+          MCPNAME=$(npm view covalent-bond@"$VERSION" mcpName 2>/dev/null || true)
+          test "$MCPNAME" = "io.github.gopalrajsuresh/covalent-bond" || { echo "::error::published package lacks the mcpName field"; exit 1; }
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish server to MCP Registry
+        run: ./mcp-publisher publish
+
+      - name: Verify the listing
+        run: |
+          for i in 1 2 3 4 5; do
+            sleep 10
+            if curl -s "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gopalrajsuresh/covalent-bond" | jq -e '.servers[] | select(.name == "io.github.gopalrajsuresh/covalent-bond")' >/dev/null; then
+              echo "Listed in the MCP Registry."
+              exit 0
+            fi
+            echo "Not visible yet (attempt $i/5)..."
+          done
+          echo "::error::server not found in registry within 50s of publishing"
+          exit 1
