@@ -8,4 +8,5 @@ useDefault = true
 description = "Test fixtures that intentionally mimic blocked secret formats"
 paths = [
   '''test/security\.test\.js''',
+  '''test/hardening-regressions\.test\.js''',
 ]
