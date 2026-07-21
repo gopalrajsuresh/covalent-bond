@@ -56,10 +56,7 @@ Or do it yourself on **both machines** (steps 1–2), then pair (step 3).
    ```
    (`--scope user` makes the `bond_*` tools available in every project. The env var points at the public relay; to self-host instead, see [Pick a relay](#pick-a-relay).)
 
-   <details>
-   <summary>Other MCP clients (Cursor, Codex, Windsurf, …) — standard config</summary>
-
-   This standard stdio-server config works in most MCP clients; paste it into the client's MCP settings JSON (the top-level key is usually `mcpServers` or `servers`):
+   For other MCP clients (Cursor, Codex, Windsurf, …), this standard stdio-server config works in most of them; paste it into the client's MCP settings JSON (the top-level key is usually `mcpServers` or `servers`):
 
    ```json
    {
@@ -74,6 +71,9 @@ Or do it yourself on **both machines** (steps 1–2), then pair (step 3).
      }
    }
    ```
+
+   <details>
+   <summary>Windows and local-testing notes</summary>
 
    On **Windows**, if your client struggles to spawn `npx` directly, wrap it: `"command": "cmd", "args": ["/c", "npx", "-y", "covalent-bond"]`. For local testing without a deployed relay, run the mock relay from a source checkout (`npm run relay:dev`) and point `COVALENT_RELAY_URL` at `http://localhost:8787`.
    </details>
@@ -179,6 +179,18 @@ The only manual step is the browser login; the agent handles the rest.
 4. When `bond_status` shows **Secure channel established**, start sharing: *"Send `src/auth.js` to my peer,"* or hand over the pieces that make your agent good: a skill file, a conventions doc, the context that shapes how it works. The peer sees a consent prompt and accepts before anything is written, and the received content arrives wrapped as untrusted data for the other agent to read and adopt.
 
 ## Tools
+
+- `bond_connect` — Create a session and get a shareable session code
+- `bond_join` — Join a session using a code shared out-of-band
+- `bond_status` — Connection status, pending transfers, and new events
+- `bond_send` — Send a file to the connected peer, encrypted end to end
+- `bond_message` — Send a short encrypted text message to the peer
+- `bond_wait` — Long-poll for the next peer event
+- `bond_accept` — Accept a pending file transfer after human consent
+- `bond_decline` — Decline a pending file transfer
+- `bond_end` — End the session and disconnect from the relay
+
+Full reference:
 
 | Tool | Parameters | What it does | Requires |
 |------|------------|--------------|----------|
